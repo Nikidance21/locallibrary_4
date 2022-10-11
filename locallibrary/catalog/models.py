@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 from django.urls import reverse  # To generate URLS by reversing URL patterns
-
+from datetime import date
 
 class Genre(models.Model):
     """Model representing a book genre (e.g. Science Fiction, Non Fiction)."""
@@ -64,7 +64,7 @@ class Book(models.Model):
 
 
 import uuid  # Required for unique book instances
-from datetime import date
+
 
 from django.contrib.auth.models import User  # Required to assign User as a borrower
 
@@ -80,8 +80,9 @@ class BookInstance(models.Model):
 
     @property
     def is_overdue(self):
-        """Determines if the book is overdue based on due date and current date."""
-        return bool(self.due_back and date.today() > self.due_back)
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
 
     LOAN_STATUS = (
         ('d', 'Maintenance'),
